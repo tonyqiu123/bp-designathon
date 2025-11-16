@@ -45,7 +45,8 @@ const ClubCard: React.FC<ClubCardProps> = ({ club, onPress }) => {
 
   return (
     <TouchableOpacity 
-      className="bg-gray-900 rounded-xl mb-2 overflow-hidden flex-1 mx-1 border border-gray-200" 
+      className="bg-gray-900 rounded-xl mb-2 overflow-hidden flex-1 mx-1" 
+      style={{ borderWidth: 0.5, borderColor: '#e5e7eb' }}
       onPress={onPress}
       activeOpacity={0.8}
     >

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import EventsScreen from '../screens/EventsScreen';
 import ClubsScreen from '../screens/ClubsScreen';
 import { View, Text } from 'react-native';
+import { COLORS } from '../constants/colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,19 +24,19 @@ const TabNavigatorContent = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#FFD700',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarActiveTintColor: COLORS.ACCENT,
+        tabBarInactiveTintColor: COLORS.GRAY_400,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: COLORS.GRAY_900,
           borderTopWidth: 1,
-          borderTopColor: '#000000',
-          height: 64 + insets.bottom,
-          paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 8,
+          borderTopColor: COLORS.GRAY_600,
+          height: COLORS.SPACING_16 + insets.bottom,
+          paddingBottom: 0,
+          paddingTop: COLORS.SPACING_2,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600' as any,
+          fontSize: 12, // text-xs equivalent
+          fontWeight: '600' as any, // font-semibold
         },
         headerShown: false,
       }}
