@@ -239,15 +239,21 @@ const AddEventScreen = ({ navigation }: any) => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-white pt-8" edges={[]}>
       {/* Scrollable Content */}
       <ScrollView
         contentContainerStyle={{ paddingBottom: 24 }}
         className="bg-white"
       >
         {/* Header */}
-        <View className="px-4 pt-4 pb-4">
+        <View className="px-4 pt-0 pb-4 flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-black">Add Event</Text>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="w-8 h-8 items-center justify-center"
+          >
+            <Ionicons name="close" size={24} color="#000000" />
+          </TouchableOpacity>
         </View>
 
         {/* Image Upload Section */}
