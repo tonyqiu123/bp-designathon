@@ -27,7 +27,7 @@ const BottomLeftMask = ({ color }: { color: string }) => (
 
 const BottomRightMask = ({ color }: { color: string }) => (
   <Svg width="8" height="8" viewBox="0 0 64 64" fill="none">
-    <Path d="M0 64C35.3462 64 64 35.3462 64 0V64H0Z" fill={color} />
+    <Path d="M64 0C63.9997 35.346 35.346 64 0 64H64V0Z" fill={color} />
   </Svg>
 );
 
@@ -78,14 +78,14 @@ const BadgeMask: React.FC<BadgeMaskProps> = ({ variant, children }) => {
     case 'bottom-right':
       return (
         <View style={{ position: 'absolute', bottom: 0, right: 0, flexDirection: 'column' }}>
-          <View style={{ marginLeft: 'auto' }}>
-            <BottomRightMask color={maskColor} />
-          </View>
           <View style={{ flexDirection: 'row' }}>
             <BottomRightMask color={maskColor} />
-            <View style={{ paddingTop: 4, paddingLeft: 4, backgroundColor: maskColor, borderTopLeftRadius: 12 }}>
+            <View style={{ paddingBottom: 4, paddingRight: 4, backgroundColor: maskColor, borderBottomRightRadius: 12 }}>
               {children}
             </View>
+          </View>
+          <View style={{ marginLeft: 'auto' }}>
+            <BottomRightMask color={maskColor} />
           </View>
         </View>
       );

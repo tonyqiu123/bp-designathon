@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Club } from '../types/club';
+import BadgeMask from './BadgeMask';
 
 interface ClubCardProps {
   club: Club;
@@ -46,41 +47,43 @@ const ClubCard: React.FC<ClubCardProps> = ({ club, onPress }) => {
 
   return (
     <TouchableOpacity 
-      className="bg-white rounded-xl mb-2 overflow-hidden flex-1 mx-1 border border-gray-200" 
+      className="bg-gray-50 rounded-xl mb-2 overflow-hidden flex-1 mx-1 border border-gray-200" 
       onPress={onPress}
       activeOpacity={0.8}
     >
       <View className="p-3.5 flex-1 relative">
-        {/* Icon buttons in top right */}
+        {/* Icon buttons in top right with clipped corner styling */}
         {(club.club_page || club.ig || club.discord) && (
-          <View className="absolute top-2 right-2 flex-row gap-1 z-10">
-            {club.club_page && (
-              <TouchableOpacity
-                onPress={handleWebsitePress}
-                className="bg-gray-700 rounded-md py-1 px-1.5 flex-row items-center justify-center"
-              >
-                <Ionicons name="globe-outline" size={14} color="#ffffff" />
-              </TouchableOpacity>
-            )}
+          <BadgeMask variant="top-right">
+            <View className="flex-row gap-1">
+              {club.club_page && (
+                <TouchableOpacity
+                  onPress={handleWebsitePress}
+                  className="bg-gray-700 px-2 py-1 rounded-lg flex-row items-center justify-center"
+                >
+                  <Ionicons name="globe-outline" size={14} color="#ffffff" />
+                </TouchableOpacity>
+              )}
 
-            {club.ig && (
-              <TouchableOpacity
-                onPress={handleInstagramPress}
-                className="bg-gray-700 rounded-md py-1 px-1.5 flex-row items-center justify-center"
-              >
-                <Ionicons name="logo-instagram" size={14} color="#ffffff" />
-              </TouchableOpacity>
-            )}
+              {club.ig && (
+                <TouchableOpacity
+                  onPress={handleInstagramPress}
+                  className="bg-gray-700 px-2 py-1 rounded-lg flex-row items-center justify-center"
+                >
+                  <Ionicons name="logo-instagram" size={14} color="#ffffff" />
+                </TouchableOpacity>
+              )}
 
-            {club.discord && (
-              <TouchableOpacity
-                onPress={handleDiscordPress}
-                className="bg-blue-bg rounded-md py-1 px-1.5 flex-row items-center justify-center"
-              >
-                <Ionicons name="logo-discord" size={14} color="#ffffff" />
-              </TouchableOpacity>
-            )}
-          </View>
+              {club.discord && (
+                <TouchableOpacity
+                  onPress={handleDiscordPress}
+                  className="bg-blue-bg px-2 py-1 rounded-lg flex-row items-center justify-center"
+                >
+                  <Ionicons name="logo-discord" size={14} color="#ffffff" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </BadgeMask>
         )}
 
         <Text className="text-base font-semibold text-black mb-2 leading-tight pr-16" numberOfLines={2}>

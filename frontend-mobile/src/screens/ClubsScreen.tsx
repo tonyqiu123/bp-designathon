@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -7,10 +7,8 @@ import {
   RefreshControl,
   TouchableOpacity,
   Modal,
-  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useClubs } from '../hooks/useClubs';
 import ClubCard from '../components/ClubCard';
@@ -21,7 +19,6 @@ import { Club } from '../types/club';
 
 const ClubsScreen = ({ navigation }: any) => {
   const [searchVisible, setSearchVisible] = useState(false);
-
   const {
     clubs,
     totalCount,

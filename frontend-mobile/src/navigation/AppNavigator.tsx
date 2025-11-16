@@ -7,6 +7,7 @@ import EventsStack from './EventsStack';
 import SavedStack from './SavedStack';
 import ClubsScreen from '../screens/ClubsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import AddEventScreen from '../screens/AddEventScreen';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
 
@@ -70,6 +71,7 @@ const TabNavigatorContent = () => {
           />
           <Tab.Screen
             name="Add"
+            component={AddEventScreen}
             options={{
               tabBarLabel: '',
               tabBarIcon: () => null,
@@ -102,9 +104,7 @@ const TabNavigatorContent = () => {
                 </TouchableOpacity>
               ),
             }}
-          >
-            {() => <PlaceholderScreen title="Add Event" />}
-          </Tab.Screen>
+          />
           <Tab.Screen
             name="Saved"
             component={SavedStack}

@@ -62,6 +62,45 @@ class APIClient {
 
     return events;
   }
+
+  async submitEvent(data: {
+    source_image_url?: string;
+    title: string;
+    description?: string;
+    location: string;
+    price?: number | null;
+    food?: string;
+    registration: boolean;
+    occurrences: Array<{ dtstart_utc: string; dtend_utc?: string; tz?: string }>;
+  }): Promise<any> {
+    const response = await this.client.post('events/submit/', data);
+    return response.data;
+  }
+
+  async extractEventFromScreenshot(imageUri: string): Promise<{
+    source_image_url: string;
+    title: string;
+    description?: string;
+    location: string;
+    price?: number;
+    food?: string;
+    registration: boolean;
+    occurrences: Array<{ dtstart_utc: string; dtend_utc?: string; tz?: string }>;
+  }> {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'screenshot.jpg',
+    } as any);
+
+    const response = await this.client.post('events/extract/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
 }
 
 export const apiClient = new APIClient();
