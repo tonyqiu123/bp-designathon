@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Club } from '../types/club';
 
 interface ClubCardProps {
@@ -45,60 +46,54 @@ const ClubCard: React.FC<ClubCardProps> = ({ club, onPress }) => {
 
   return (
     <TouchableOpacity 
-      className="bg-gray-900 rounded-xl mb-2 overflow-hidden flex-1 mx-1" 
-      style={{ borderWidth: 0.5, borderColor: '#e5e7eb' }}
+      className="bg-white rounded-xl mb-2 overflow-hidden flex-1 mx-1 border border-gray-200" 
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <View className="p-3.5 flex-1">
-        <Text className="text-sm font-semibold text-white mb-2 leading-tight" numberOfLines={2}>
+      <View className="p-3.5 flex-1 relative">
+        {/* Icon buttons in top right */}
+        {(club.club_page || club.ig || club.discord) && (
+          <View className="absolute top-2 right-2 flex-row gap-1 z-10">
+            {club.club_page && (
+              <TouchableOpacity
+                onPress={handleWebsitePress}
+                className="bg-gray-700 rounded-md py-1 px-1.5 flex-row items-center justify-center"
+              >
+                <Ionicons name="globe-outline" size={14} color="#ffffff" />
+              </TouchableOpacity>
+            )}
+
+            {club.ig && (
+              <TouchableOpacity
+                onPress={handleInstagramPress}
+                className="bg-gray-700 rounded-md py-1 px-1.5 flex-row items-center justify-center"
+              >
+                <Ionicons name="logo-instagram" size={14} color="#ffffff" />
+              </TouchableOpacity>
+            )}
+
+            {club.discord && (
+              <TouchableOpacity
+                onPress={handleDiscordPress}
+                className="bg-blue-bg rounded-md py-1 px-1.5 flex-row items-center justify-center"
+              >
+                <Ionicons name="logo-discord" size={14} color="#ffffff" />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+
+        <Text className="text-base font-semibold text-black mb-2 leading-tight pr-16" numberOfLines={2}>
           {club.club_name}
         </Text>
         
         {club.categories && club.categories.length > 0 && (
           <View className="flex-row items-start mb-3 gap-1.5">
-            <Text className="text-xs text-gray-400 leading-4" numberOfLines={2}>
+            <Text className="text-sm text-gray-600 leading-4" numberOfLines={2}>
               {club.categories.join(' | ')}
             </Text>
           </View>
         )}
-
-        <View className="mt-auto">
-          {club.club_page ? (
-            <TouchableOpacity
-              onPress={handleWebsitePress}
-              className="bg-blue-bg rounded-lg py-2 px-3 mb-2 flex-row items-center justify-center gap-1.5"
-            >
-              <Text className="text-xs font-medium text-white">Website</Text>
-            </TouchableOpacity>
-          ) : (
-            <View className="py-2 mb-2">
-              <Text className="text-xs text-gray-400 text-center">No website available</Text>
-            </View>
-          )}
-
-          {(club.ig || club.discord) && (
-            <View className="flex-row gap-2">
-              {club.ig && (
-                <TouchableOpacity
-                  onPress={handleInstagramPress}
-                  className="flex-1 bg-gray-700 rounded-lg py-2 px-3 flex-row items-center justify-center gap-1.5"
-                >
-                  <Text className="text-xs font-medium text-white">Instagram</Text>
-                </TouchableOpacity>
-              )}
-
-              {club.discord && (
-                <TouchableOpacity
-                  onPress={handleDiscordPress}
-                  className="flex-1 bg-blue-bg rounded-lg py-2 px-3 flex-row items-center justify-center gap-1.5"
-                >
-                  <Text className="text-xs font-medium text-white">Discord</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-        </View>
       </View>
     </TouchableOpacity>
   );
