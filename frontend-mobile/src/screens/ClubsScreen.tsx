@@ -50,7 +50,7 @@ const ClubsScreen = () => {
 
   const renderHeader = useCallback(
     () => (
-      <View className="bg-blue-bg pb-3 mb-2 pt-3">
+      <View className="bg-gray-900 pb-3 mb-2 pt-3">
         <Text className="text-2xl font-bold text-white px-4 pt-3 pb-2">
           {totalCount} Clubs
         </Text>
@@ -68,7 +68,7 @@ const ClubsScreen = () => {
           categories={uniqueCategories}
         />
         {!isLoading && (
-          <Text className="text-xs text-gray-300 px-4 pt-2 pb-1">
+          <Text className="text-xs text-white px-4 pt-2 pb-1">
             Showing {clubs.length} of {totalCount} clubs
           </Text>
         )}
@@ -97,7 +97,7 @@ const ClubsScreen = () => {
 
   if (error) {
     return (
-      <SafeAreaView className="flex-1 bg-blue-bg" edges={['top']}>
+      <SafeAreaView className="flex-1 bg-gray-900" edges={['top']}>
         <View className="flex-1 justify-center items-center p-5">
           <Text className="text-lg font-semibold text-red-500 mb-2">
             Error loading clubs
@@ -109,7 +109,7 @@ const ClubsScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-blue-bg" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-900" edges={['top']}>
       <FlatList
         data={clubs}
         keyExtractor={(item) => item.id.toString()}
