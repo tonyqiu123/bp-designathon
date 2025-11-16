@@ -21,7 +21,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+          contentContainerStyle={{ paddingHorizontal: 12, gap: 16 }}
         >
           {categories.map((category) => {
             const isActive = selectedCategory === category ||
@@ -30,13 +30,11 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
             return (
               <TouchableOpacity
                 key={category}
-                className={`flex-row items-center px-3 py-2 rounded-full mr-2 ${
-                  isActive ? 'bg-gray-700' : 'bg-gray-100'
-                }`}
                 onPress={() => onSelectCategory(category === 'All categories' ? 'all' : category)}
+                className="py-2 px-1"
               >
-                <Text className={`text-xs ${
-                  isActive ? 'text-white font-medium' : 'text-black font-medium'
+                <Text className={`text-sm ${
+                  isActive ? 'text-gray-900 font-semibold' : 'text-gray-400 font-medium'
                 }`}>
                   {category}
                 </Text>

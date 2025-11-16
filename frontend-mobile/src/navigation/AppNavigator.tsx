@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import EventsStack from './EventsStack';
+import SavedStack from './SavedStack';
 import ClubsScreen from '../screens/ClubsScreen';
-import SavedScreen from '../screens/SavedScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
@@ -26,20 +26,17 @@ const TabNavigatorContent = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: COLORS.ACCENT,
-        tabBarInactiveTintColor: COLORS.GRAY_400,
+        tabBarActiveTintColor: '#000000',
+        tabBarInactiveTintColor: '#9CA3AF',
         tabBarStyle: {
-          backgroundColor: COLORS.GRAY_900,
+          backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
-          borderTopColor: COLORS.GRAY_600,
-          height: COLORS.SPACING_16 + insets.bottom,
-          paddingBottom: 0,
-          paddingTop: COLORS.SPACING_2,
+          borderTopColor: '#E5E7EB',
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom,
+          paddingTop: 8,
         },
-        tabBarLabelStyle: {
-          fontSize: 12, // text-xs equivalent
-          fontWeight: '600' as any, // font-semibold
-        },
+        tabBarShowLabel: false,
         headerShown: false,
       }}
     >
@@ -50,7 +47,7 @@ const TabNavigatorContent = () => {
               tabBarLabel: 'Events',
               tabBarIcon: ({ color, size, focused }) => (
                 <Ionicons
-                  name={focused ? 'calendar' : 'calendar-outline'}
+                  name={focused ? 'home' : 'home-outline'}
                   size={size || 24}
                   color={focused ? color : color}
                 />
@@ -64,7 +61,7 @@ const TabNavigatorContent = () => {
               tabBarLabel: 'Clubs',
               tabBarIcon: ({ color, size, focused }) => (
                 <Ionicons
-                  name={focused ? 'business' : 'business-outline'}
+                  name={focused ? 'people' : 'people-outline'}
                   size={size || 24}
                   color={focused ? color : color}
                 />
@@ -110,7 +107,7 @@ const TabNavigatorContent = () => {
           </Tab.Screen>
           <Tab.Screen
             name="Saved"
-            component={SavedScreen}
+            component={SavedStack}
             options={{
               tabBarLabel: 'Saved',
               tabBarIcon: ({ color, size, focused }) => (

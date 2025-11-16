@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { Event } from '../types/event';
 import { Ionicons } from '@expo/vector-icons';
+import { savedEventsService } from '../services/savedEvents';
 
 interface EventDetailScreenProps {
   route: {
@@ -19,6 +19,20 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation }) => {
   const { event } = route.params;
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const checkSaved = async () => {
+      const saved = await savedEventsService.isEventSaved(event.id);
+      setIsSaved(saved);
+    };
+    checkSaved();
+  }, [event.id]);
+
+  const handleToggleSave = async () => {
+    const newSavedState = await savedEventsService.toggleSaveEvent(event.id);
+    setIsSaved(newSavedState);
+  };
 
   const formatDate = (dateString: string) => {
     try {
@@ -93,13 +107,19 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
 
       {/* Right side action buttons (TikTok-style) */}
       <View className="absolute right-4 bottom-32 items-center">
-        {/* Like */}
-        <View className="mb-6 items-center">
+        {/* Like/Save */}
+        <TouchableOpacity onPress={handleToggleSave} className="mb-6 items-center">
           <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mb-1">
-            <Ionicons name="heart-outline" size={28} color="#ffffff" />
+            <Ionicons
+              name={isSaved ? 'heart' : 'heart-outline'}
+              size={28}
+              color={isSaved ? '#EF4444' : '#ffffff'}
+            />
           </View>
-          <Text className="text-white text-xs font-semibold">{event.interest_count || 0}</Text>
-        </View>
+          <Text className="text-white text-xs font-semibold">
+            {(event.interest_count || 0) + (isSaved ? 1 : 0)}
+          </Text>
+        </TouchableOpacity>
 
         {/* Comment */}
         <View className="mb-6 items-center">

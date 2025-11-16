@@ -56,7 +56,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onClose, onSearch }) => {
                 onChangeText={setSearchText}
                 placeholder="Search events..."
                 placeholderTextColor="#999"
-                autoFocus
                 returnKeyType="search"
                 onSubmitEditing={() => handleSearch(searchText)}
               />

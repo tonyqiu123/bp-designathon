@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Event } from '../types/event';
 import { getEventStatus, isEventNew } from '../utils/eventUtils';
 import BadgeMask from './BadgeMask';
+import { savedEventsService } from '../services/savedEvents';
 
 interface EventCardProps {
   event: Event;
@@ -11,6 +13,7 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [isSaved, setIsSaved] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -25,6 +28,20 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
 
   const status = getEventStatus(event);
   const isNew = isEventNew(event);
+
+  useEffect(() => {
+    const checkSaved = async () => {
+      const saved = await savedEventsService.isEventSaved(event.id);
+      setIsSaved(saved);
+    };
+    checkSaved();
+  }, [event.id]);
+
+  const handleToggleSave = async (e: any) => {
+    e.stopPropagation();
+    const newSavedState = await savedEventsService.toggleSaveEvent(event.id);
+    setIsSaved(newSavedState);
+  };
 
   // Pulsating animation for LIVE badge
   useEffect(() => {
@@ -99,6 +116,20 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
             </View>
           </BadgeMask>
         )}
+
+        {/* Heart/Save Button (bottom-right) */}
+        <BadgeMask variant="bottom-right">
+          <TouchableOpacity
+            onPress={handleToggleSave}
+            className="px-1.5 py-1"
+          >
+            <Ionicons
+              name={isSaved ? 'heart' : 'heart-outline'}
+              size={16}
+              color={isSaved ? '#EF4444' : '#374151'}
+            />
+          </TouchableOpacity>
+        </BadgeMask>
       </View>
       <View className="p-2.5">
         <Text className="text-sm font-semibold text-black mb-1.5" numberOfLines={2}>
@@ -111,10 +142,10 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
           </Text>
         )}
         {event.price !== null && event.price > 0 && (
-          <Text className="text-sm font-semibold text-yellow-500">${event.price}</Text>
+          <Text className="text-sm font-semibold text-green-600">${event.price}</Text>
         )}
         {event.price === 0 && (
-          <Text className="text-sm font-semibold text-yellow-500">Free</Text>
+          <Text className="text-sm font-semibold text-green-600">Free</Text>
         )}
         {event.food && event.food.trim() !== '' && (
           <Text className="text-xs text-gray-500 mb-1" numberOfLines={1}>

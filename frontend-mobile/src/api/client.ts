@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import Constants from 'expo-constants';
-import { EventsResponse, EventsQueryParams } from '../types/event';
+import { EventsResponse, EventsQueryParams, Event } from '../types/event';
 import { ClubsResponse, ClubsQueryParams } from '../types/club';
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.wat2do.ca/api';
@@ -45,6 +45,22 @@ class APIClient {
     const endpoint = queryString ? `clubs/?${queryString}` : 'clubs/';
     const response = await this.client.get<ClubsResponse>(endpoint);
     return response.data;
+  }
+
+  async getEventsByIds(ids: number[]): Promise<Event[]> {
+    const events: Event[] = [];
+
+    // Fetch each event by ID
+    for (const id of ids) {
+      try {
+        const response = await this.client.get<Event>(`events/${id}/`);
+        events.push(response.data);
+      } catch (error) {
+        console.warn(`Failed to fetch event ${id}:`, error);
+      }
+    }
+
+    return events;
   }
 }
 

@@ -21,9 +21,7 @@ import { Club } from '../types/club';
 
 const ClubsScreen = ({ navigation }: any) => {
   const [searchVisible, setSearchVisible] = useState(false);
-  const titleOpacity = useRef(new Animated.Value(0)).current;
-  const titleTranslateY = useRef(new Animated.Value(10)).current;
-  
+
   const {
     clubs,
     totalCount,
@@ -38,38 +36,6 @@ const ClubsScreen = ({ navigation }: any) => {
     hasNextPage,
     isFetchingNextPage,
   } = useClubs();
-
-  const animateTitle = useCallback(() => {
-    // Reset animation values
-    titleOpacity.setValue(0);
-    titleTranslateY.setValue(10);
-    
-    // Animate in
-    Animated.parallel([
-      Animated.timing(titleOpacity, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.timing(titleTranslateY, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [titleOpacity, titleTranslateY]);
-
-  // Animate on mount and when screen comes into focus
-  useFocusEffect(
-    useCallback(() => {
-      animateTitle();
-    }, [animateTitle])
-  );
-
-  // Also animate when search term or category changes
-  useEffect(() => {
-    animateTitle();
-  }, [searchTerm, category, animateTitle]);
 
   const handleScroll = useCallback(
     ({ nativeEvent }: any) => {
@@ -126,22 +92,16 @@ const ClubsScreen = ({ navigation }: any) => {
         }
       >
         {/* Header */}
-        <View className="bg-white pb-2 mb-1">
-          <Animated.View
-            className="flex-row items-center justify-between px-3 pt-2 pb-1"
-            style={{
-              opacity: titleOpacity,
-              transform: [{ translateY: titleTranslateY }],
-            }}
-          >
+        <View className="bg-white pb-2 border-b border-gray-100">
+          <View className="flex-row items-center justify-between px-3 pt-2 pb-1">
             <View className="flex-row items-baseline">
-              <AnimatedNumber value={totalCount} className="text-3xl font-bold text-black" />
-              <Text className="text-3xl font-bold text-black"> Clubs</Text>
+              <AnimatedNumber value={totalCount} className="text-2xl font-bold text-black" />
+              <Text className="text-2xl font-bold text-black"> Clubs</Text>
             </View>
             <TouchableOpacity onPress={() => setSearchVisible(true)} className="p-2">
               <Ionicons name="search" size={22} color="#374151" />
             </TouchableOpacity>
-          </Animated.View>
+          </View>
 
           {/* Active Search Display */}
           {searchTerm && (
