@@ -5,7 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Event } from '../types/event';
 import { Ionicons } from '@expo/vector-icons';
 import { savedEventsService } from '../services/savedEvents';
+import { commentsService } from '../services/comments';
 import SearchScreen from './SearchScreen';
+import CommentsScreen from './CommentsScreen';
 
 interface EventDetailScreenProps {
   route: {
@@ -22,14 +24,32 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
   const { event } = route.params;
   const [isSaved, setIsSaved] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
+  const [commentsVisible, setCommentsVisible] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
     const checkSaved = async () => {
       const saved = await savedEventsService.isEventSaved(event.id);
       setIsSaved(saved);
     };
+    const loadCommentCount = async () => {
+      const count = await commentsService.getCommentCount(event.id);
+      setCommentCount(count);
+    };
     checkSaved();
+    loadCommentCount();
   }, [event.id]);
+
+  useEffect(() => {
+    if (!commentsVisible) {
+      // Reload comment count when comments modal closes
+      const loadCommentCount = async () => {
+        const count = await commentsService.getCommentCount(event.id);
+        setCommentCount(count);
+      };
+      loadCommentCount();
+    }
+  }, [commentsVisible, event.id]);
 
   const handleToggleSave = async () => {
     const newSavedState = await savedEventsService.toggleSaveEvent(event.id);
@@ -132,12 +152,12 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
         </TouchableOpacity>
 
         {/* Comment */}
-        <View className="mb-6 items-center">
+        <TouchableOpacity onPress={() => setCommentsVisible(true)} className="mb-6 items-center">
           <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mb-1">
             <Ionicons name="chatbubble-outline" size={26} color="#ffffff" />
           </View>
-          <Text className="text-white text-xs font-semibold">0</Text>
-        </View>
+          <Text className="text-white text-xs font-semibold">{commentCount}</Text>
+        </TouchableOpacity>
 
         {/* Share */}
         <TouchableOpacity onPress={handleShare} className="items-center">
@@ -247,6 +267,18 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
             navigation.navigate('Events');
             setSearchVisible(false);
           }}
+        />
+      </Modal>
+
+      {/* Comments Modal */}
+      <Modal
+        visible={commentsVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <CommentsScreen
+          eventId={event.id}
+          onClose={() => setCommentsVisible(false)}
         />
       </Modal>
     </View>

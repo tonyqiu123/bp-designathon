@@ -40,7 +40,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onClose, onSearch }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom', 'left', 'right']}>
+    <SafeAreaView className="flex-1 bg-white" edges={['bottom', 'left', 'right']}>
+      {/* Fixed top spacing */}
+      <View style={{ height: 40 }} />
+
       <View className="flex-1">
         {/* Header with search input */}
         <View className="px-4 py-3 border-b border-gray-200">
