@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Image, TouchableOpacity, Animated } from 'react-native';
 import { Event } from '../types/event';
 import { getEventStatus, isEventNew } from '../utils/eventUtils';
 import BadgeMask from './BadgeMask';
@@ -10,6 +10,8 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -23,6 +25,28 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
 
   const status = getEventStatus(event);
   const isNew = isEventNew(event);
+
+  // Pulsating animation for LIVE badge
+  useEffect(() => {
+    if (status === 'live') {
+      const pulse = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.15,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      pulse.start();
+      return () => pulse.stop();
+    }
+  }, [status, pulseAnim]);
 
   return (
     <TouchableOpacity className="bg-white rounded-xl mb-2 overflow-hidden border border-gray-200" onPress={onPress}>
@@ -38,9 +62,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
         {/* Event Status Badge (top-right) */}
         {status === 'live' && (
           <BadgeMask variant="top-right">
-            <View className="bg-red-600 px-2 py-1 rounded-lg">
+            <Animated.View
+              className="bg-red-600 px-2 py-1 rounded-lg"
+              style={{ transform: [{ scale: pulseAnim }] }}
+            >
               <Text className="text-xs font-extrabold text-white">LIVE</Text>
-            </View>
+            </Animated.View>
           </BadgeMask>
         )}
         {status === 'soon' && (
