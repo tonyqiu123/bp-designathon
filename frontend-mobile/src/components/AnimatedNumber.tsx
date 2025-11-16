@@ -1,43 +1,82 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Text } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  interpolate,
+} from 'react-native-reanimated';
 
 interface AnimatedNumberProps {
   value: number;
   className?: string;
 }
 
-const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value, className }) => {
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  const [displayValue, setDisplayValue] = useState(0);
-  const previousValue = useRef<number | null>(null);
+const AnimatedDigit: React.FC<{ digit: string; index: number }> = ({ digit, index }) => {
+  const animValue = useSharedValue(0);
 
   useEffect(() => {
-    // Always reset to 0 and animate to new value (on mount or when value changes)
-    animatedValue.setValue(0);
-    setDisplayValue(0);
-    
-    Animated.timing(animatedValue, {
-      toValue: value,
-      duration: 800,
-      useNativeDriver: false,
-    }).start();
-
-    const listenerId = animatedValue.addListener(({ value: newValue }) => {
-      setDisplayValue(Math.floor(newValue));
+    animValue.value = 0;
+    animValue.value = withSpring(1, {
+      damping: 15,
+      stiffness: 100,
     });
+  }, [digit]);
 
-    previousValue.current = value;
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      animValue.value,
+      [0, 1],
+      [-20, 0]
+    );
 
-    return () => {
-      animatedValue.removeListener(listenerId);
+    const opacity = interpolate(
+      animValue.value,
+      [0, 1],
+      [0, 1]
+    );
+
+    return {
+      transform: [{ translateY }],
+      opacity,
     };
-  }, [value, animatedValue]);
+  });
 
   return (
-    <Text className={className}>
-      {displayValue}
-    </Text>
+    <Animated.Text style={[styles.digit, animatedStyle]}>
+      {digit}
+    </Animated.Text>
   );
 };
+
+const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value, className }) => {
+  const formattedValue = useMemo(() => {
+    return value.toLocaleString();
+  }, [value]);
+
+  const digits = useMemo(() => {
+    return formattedValue.split('');
+  }, [formattedValue]);
+
+  return (
+    <View style={styles.container}>
+      {digits.map((digit, index) => (
+        <AnimatedDigit key={`${index}-${digit}`} digit={digit} index={index} />
+      ))}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
+  digit: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+});
 
 export default AnimatedNumber;
