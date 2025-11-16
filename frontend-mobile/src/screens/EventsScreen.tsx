@@ -1,20 +1,23 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
-  FlatList,
-  StyleSheet,
+  ScrollView,
   ActivityIndicator,
   Text,
   RefreshControl,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useEvents } from '../hooks/useEvents';
 import EventCard from '../components/EventCard';
-import SearchBar from '../components/SearchBar';
 import CategoryFilters from '../components/CategoryFilters';
-import { Event } from '../types/event';
+import SearchScreen from './SearchScreen';
+import AnimatedNumber from '../components/AnimatedNumber';
 
-const EventsScreen = () => {
+const EventsScreen = ({ navigation }: any) => {
+  const [searchVisible, setSearchVisible] = useState(false);
   const {
     events,
     totalCount,
@@ -29,146 +32,142 @@ const EventsScreen = () => {
     isFetchingNextPage,
   } = useEvents();
 
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+  const handleScroll = useCallback(
+    ({ nativeEvent }: any) => {
+      const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+      const paddingToBottom = 20;
+      const isCloseToBottom =
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom;
+
+      if (isCloseToBottom && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  );
+
+  // Split events into two columns
+  const leftColumn: Event[] = [];
+  const rightColumn: Event[] = [];
+
+  events.forEach((event, index) => {
+    if (index % 2 === 0) {
+      leftColumn.push(event);
+    } else {
+      rightColumn.push(event);
     }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  const renderEventCard = useCallback(
-    ({ item }: { item: Event }) => (
-      <EventCard
-        event={item}
-        onPress={() => {
-          // TODO: Navigate to event detail screen
-          console.log('Event pressed:', item.id);
-        }}
-      />
-    ),
-    []
-  );
-
-  const renderHeader = useCallback(
-    () => (
-      <View style={styles.header}>
-        <Text style={styles.title}>{totalCount} Upcoming Events</Text>
-        <SearchBar
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-          placeholder="Search events..."
-        />
-        <CategoryFilters
-          selectedCategory={categories}
-          onSelectCategory={setCategories}
-        />
-      </View>
-    ),
-    [totalCount, searchTerm, setSearchTerm, categories, setCategories]
-  );
-
-  const renderFooter = useCallback(() => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <View style={styles.footer}>
-        <ActivityIndicator size="small" color="#374151" />
-      </View>
-    );
-  }, [isFetchingNextPage]);
-
-  const renderEmpty = useCallback(() => {
-    if (isLoading) return null;
-    return (
-      <View style={styles.empty}>
-        <Text style={styles.emptyText}>No events found</Text>
-      </View>
-    );
-  }, [isLoading]);
+  });
 
   if (error) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.error}>
-          <Text style={styles.errorText}>Error loading events</Text>
-          <Text style={styles.errorSubtext}>{error.message}</Text>
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <View className="flex-1 justify-center items-center px-5">
+          <Text className="text-lg font-semibold text-red-500 mb-2">
+            Error loading events
+          </Text>
+          <Text className="text-sm text-gray-600 text-center">
+            {error.message}
+          </Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderEventCard}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
-        ListEmptyComponent={renderEmpty}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        contentContainerStyle={styles.listContent}
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <ScrollView
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
-            refreshing={isLoading && events.length === 0}
+            refreshing={false}
             colors={['#374151']}
           />
         }
-      />
+      >
+        {/* Header */}
+        <View className="bg-white pb-2 mb-1">
+          <View className="flex-row items-center justify-between px-3 pt-2 pb-1">
+            <View className="flex-row items-baseline">
+              <AnimatedNumber value={totalCount} className="text-2xl font-bold text-black" />
+              <Text className="text-2xl font-bold text-black"> Upcoming Events</Text>
+            </View>
+            <TouchableOpacity onPress={() => setSearchVisible(true)} className="p-2">
+              <Ionicons name="search" size={22} color="#374151" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Active Search Display */}
+          {searchTerm && (
+            <View className="mx-3 mb-2 mt-1">
+              <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
+                <Ionicons name="search" size={16} color="#9ca3af" style={{ marginRight: 8 }} />
+                <Text className="flex-1 text-sm text-gray-900">{searchTerm}</Text>
+                <TouchableOpacity onPress={() => setSearchTerm('')} className="ml-2">
+                  <Ionicons name="close-circle" size={18} color="#9ca3af" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          <CategoryFilters
+            selectedCategory={categories}
+            onSelectCategory={setCategories}
+          />
+        </View>
+
+        {/* Two Column Layout */}
+        {events.length > 0 ? (
+          <View className="flex-row px-2 pb-4">
+            {/* Left Column */}
+            <View className="flex-1 pr-1">
+              {leftColumn.map((event) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  onPress={() => navigation.navigate('EventDetail', { event })}
+                />
+              ))}
+            </View>
+
+            {/* Right Column */}
+            <View className="flex-1 pl-1">
+              {rightColumn.map((event) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  onPress={() => navigation.navigate('EventDetail', { event })}
+                />
+              ))}
+            </View>
+          </View>
+        ) : !isLoading ? (
+          <View className="py-10 items-center">
+            <Text className="text-base text-gray-600">No events found</Text>
+          </View>
+        ) : null}
+
+        {/* Loading Footer */}
+        {isFetchingNextPage && (
+          <View className="py-5 items-center">
+            <ActivityIndicator size="small" color="#374151" />
+          </View>
+        )}
+      </ScrollView>
+
+      <Modal
+        visible={searchVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+      >
+        <SearchScreen
+          onClose={() => setSearchVisible(false)}
+          onSearch={(term) => setSearchTerm(term)}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    backgroundColor: '#fff',
-    paddingBottom: 12,
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold' as any,
-    color: '#1a1a1a',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  footer: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  empty: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  error: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  errorText: {
-    fontSize: 18,
-    fontWeight: '600' as any,
-    color: '#ef4444',
-    marginBottom: 8,
-  },
-  errorSubtext: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-  },
-});
 
 export default EventsScreen;

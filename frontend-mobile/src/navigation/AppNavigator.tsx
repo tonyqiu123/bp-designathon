@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import EventsScreen from '../screens/EventsScreen';
+import EventsStack from './EventsStack';
 import ClubsScreen from '../screens/ClubsScreen';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
 
 const Tab = createBottomTabNavigator();
@@ -43,7 +43,7 @@ const TabNavigatorContent = () => {
     >
           <Tab.Screen
             name="Events"
-            component={EventsScreen}
+            component={EventsStack}
             options={{
               tabBarLabel: 'Events',
               tabBarIcon: ({ color, size, focused }) => (
@@ -69,6 +69,43 @@ const TabNavigatorContent = () => {
               ),
             }}
           />
+          <Tab.Screen
+            name="Add"
+            options={{
+              tabBarLabel: '',
+              tabBarIcon: () => null,
+              tabBarButton: (props) => (
+                <TouchableOpacity
+                  {...props}
+                  style={{
+                    top: -10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 28,
+                      backgroundColor: '#3b82f6',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 3.84,
+                      elevation: 5,
+                    }}
+                  >
+                    <Ionicons name="add" size={32} color="#ffffff" />
+                  </View>
+                </TouchableOpacity>
+              ),
+            }}
+          >
+            {() => <PlaceholderScreen title="Add Event" />}
+          </Tab.Screen>
           <Tab.Screen
             name="Saved"
             options={{

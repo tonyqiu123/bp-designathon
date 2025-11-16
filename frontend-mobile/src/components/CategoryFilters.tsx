@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { EVENT_EMOJIS_CATEGORIES, getEmojiUrl } from '../constants/events';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { EVENT_EMOJIS_CATEGORIES } from '../constants/events';
 
 interface CategoryFiltersProps {
   selectedCategory: string;
@@ -24,7 +24,7 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
           contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
         >
           {categories.map((category) => {
-            const isActive = selectedCategory === category || 
+            const isActive = selectedCategory === category ||
               (category === 'All categories' && selectedCategory === 'all');
 
             return (
@@ -48,31 +48,25 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
     );
   }
 
-  // Default event categories
+  // Default event categories - text only
   return (
     <View className="bg-transparent py-2">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+        contentContainerStyle={{ paddingHorizontal: 12, gap: 16 }}
       >
-        {EVENT_EMOJIS_CATEGORIES.map(([emojiCategory, emoji, category]) => {
+        {EVENT_EMOJIS_CATEGORIES.map(([emoji, category]) => {
           const isActive = selectedCategory === category;
 
           return (
             <TouchableOpacity
               key={category}
-              className={`flex-row items-center px-3 py-2 rounded-full mr-2 ${
-                isActive ? 'bg-gray-700' : 'bg-gray-100'
-              }`}
               onPress={() => onSelectCategory(isActive ? '' : category)}
+              className="py-2 px-1"
             >
-              <Image
-                source={{ uri: getEmojiUrl([emojiCategory, emoji]) }}
-                className="w-4 h-4 mr-1.5"
-              />
-              <Text className={`text-xs ${
-                isActive ? 'text-white font-medium' : 'text-black font-medium'
+              <Text className={`text-sm ${
+                isActive ? 'text-gray-900 font-semibold' : 'text-gray-400 font-medium'
               }`}>
                 {category}
               </Text>

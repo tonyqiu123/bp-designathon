@@ -13,9 +13,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = 'Search events...',
 }) => {
   return (
-    <View className="px-4 py-2">
+    <View className="px-3 py-1.5">
       <TextInput
-        className="bg-gray-100 rounded-lg px-4 py-3 text-base text-black border border-gray-300"
+        className="bg-gray-100 rounded-lg px-3.5 py-2.5 text-base text-black border border-gray-300"
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

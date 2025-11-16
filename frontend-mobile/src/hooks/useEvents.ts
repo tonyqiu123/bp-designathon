@@ -35,6 +35,7 @@ export const useEvents = () => {
     getNextPageParam: (lastPage) =>
       lastPage.hasMore ? lastPage.nextCursor : undefined,
     initialPageParam: undefined as string | undefined,
+    placeholderData: (previousData) => previousData,
   });
 
   const events = useMemo(() => {
