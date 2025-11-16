@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import Constants from 'expo-constants';
 import { EventsResponse, EventsQueryParams } from '../types/event';
+import { ClubsResponse, ClubsQueryParams } from '../types/club';
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.wat2do.ca/api';
 
@@ -28,6 +29,21 @@ class APIClient {
 
     const endpoint = queryString ? `events/?${queryString}` : 'events/';
     const response = await this.client.get<EventsResponse>(endpoint);
+    return response.data;
+  }
+
+  async getClubs(params: ClubsQueryParams = {}): Promise<ClubsResponse> {
+    const queryString = new URLSearchParams(
+      Object.entries(params).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          acc[key] = String(value);
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+    const endpoint = queryString ? `clubs/?${queryString}` : 'clubs/';
+    const response = await this.client.get<ClubsResponse>(endpoint);
     return response.data;
   }
 }

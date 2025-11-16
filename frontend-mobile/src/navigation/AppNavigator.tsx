@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import EventsScreen from '../screens/EventsScreen';
+import ClubsScreen from '../screens/ClubsScreen';
 import { View, Text } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -55,6 +56,7 @@ const TabNavigatorContent = () => {
           />
           <Tab.Screen
             name="Clubs"
+            component={ClubsScreen}
             options={{
               tabBarLabel: 'Clubs',
               tabBarIcon: ({ color, size, focused }) => (
@@ -65,9 +67,7 @@ const TabNavigatorContent = () => {
                 />
               ),
             }}
-          >
-            {() => <PlaceholderScreen title="Clubs" />}
-          </Tab.Screen>
+          />
           <Tab.Screen
             name="Saved"
             options={{

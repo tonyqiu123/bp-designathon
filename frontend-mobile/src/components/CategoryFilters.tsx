@@ -1,22 +1,60 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { EVENT_EMOJIS_CATEGORIES, getEmojiUrl } from '../constants/events';
 
 interface CategoryFiltersProps {
   selectedCategory: string;
   onSelectCategory: (category: string) => void;
+  categories?: string[];
 }
 
 const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   selectedCategory,
   onSelectCategory,
+  categories,
 }) => {
+  // If categories prop is provided, use it (for clubs)
+  // Otherwise, use event categories
+  if (categories) {
+    return (
+      <View className="bg-transparent py-2">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+        >
+          {categories.map((category) => {
+            const isActive = selectedCategory === category || 
+              (category === 'All categories' && selectedCategory === 'all');
+
+            return (
+              <TouchableOpacity
+                key={category}
+                className={`flex-row items-center px-3 py-2 rounded-full mr-2 ${
+                  isActive ? 'bg-gray-700' : 'bg-gray-100'
+                }`}
+                onPress={() => onSelectCategory(category === 'All categories' ? 'all' : category)}
+              >
+                <Text className={`text-xs ${
+                  isActive ? 'text-white font-medium' : 'text-black font-medium'
+                }`}>
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  // Default event categories
   return (
-    <View style={styles.container}>
+    <View className="bg-transparent py-2">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
       >
         {EVENT_EMOJIS_CATEGORIES.map(([emojiCategory, emoji, category]) => {
           const isActive = selectedCategory === category;
@@ -24,14 +62,18 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
           return (
             <TouchableOpacity
               key={category}
-              style={[styles.filterButton, isActive && styles.filterButtonActive]}
+              className={`flex-row items-center px-3 py-2 rounded-full mr-2 ${
+                isActive ? 'bg-gray-700' : 'bg-gray-100'
+              }`}
               onPress={() => onSelectCategory(isActive ? '' : category)}
             >
               <Image
                 source={{ uri: getEmojiUrl([emojiCategory, emoji]) }}
-                style={styles.emoji}
+                className="w-4 h-4 mr-1.5"
               />
-              <Text style={[styles.filterText, isActive && styles.filterTextActive]}>
+              <Text className={`text-xs ${
+                isActive ? 'text-white font-medium' : 'text-black font-medium'
+              }`}>
                 {category}
               </Text>
             </TouchableOpacity>
@@ -41,41 +83,5 @@ const CategoryFilters: React.FC<CategoryFiltersProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    paddingVertical: 8,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    gap: 8,
-  },
-  filterButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#f5f5f5',
-    marginRight: 8,
-  },
-  filterButtonActive: {
-    backgroundColor: '#374151',
-  },
-  emoji: {
-    width: 16,
-    height: 16,
-    marginRight: 6,
-  },
-  filterText: {
-    fontSize: 13,
-    color: '#1a1a1a',
-    fontWeight: '500' as any,
-  },
-  filterTextActive: {
-    color: '#fff',
-  },
-});
 
 export default CategoryFilters;

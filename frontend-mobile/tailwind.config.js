@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         accent: '#FFD700', // Yellow accent color
+        'blue-bg': '#0056D6', // Blue background color from frontend
       },
     },
   },
