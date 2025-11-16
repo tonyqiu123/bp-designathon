@@ -76,9 +76,42 @@ const EventsScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      {/* Header - Fixed at top */}
+      <View className="bg-white pb-2 border-b border-gray-100">
+        <View className="flex-row items-center justify-between px-3 pt-2 pb-1">
+          <View className="flex-row items-baseline">
+            <AnimatedNumber value={totalCount} className="text-2xl font-bold text-black" />
+            <Text className="text-2xl font-bold text-black"> Upcoming Events</Text>
+          </View>
+          <TouchableOpacity onPress={() => setSearchVisible(true)} className="p-2">
+            <Ionicons name="search" size={22} color="#374151" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Active Search Display */}
+        {searchTerm && (
+          <View className="mx-3 mb-2 mt-1">
+            <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
+              <Ionicons name="search" size={16} color="#9ca3af" style={{ marginRight: 8 }} />
+              <Text className="flex-1 text-sm text-gray-900">{searchTerm}</Text>
+              <TouchableOpacity onPress={() => setSearchTerm('')} className="ml-2">
+                <Ionicons name="close-circle" size={18} color="#9ca3af" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        <CategoryFilters
+          selectedCategory={categories}
+          onSelectCategory={setCategories}
+        />
+      </View>
+
+      {/* Scrollable Content */}
       <ScrollView
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        contentContainerStyle={{ paddingTop: 8 }}
         refreshControl={
           <RefreshControl
             refreshing={false}
@@ -86,37 +119,6 @@ const EventsScreen = ({ navigation }: any) => {
           />
         }
       >
-        {/* Header */}
-        <View className="bg-white pb-2 mb-1">
-          <View className="flex-row items-center justify-between px-3 pt-2 pb-1">
-            <View className="flex-row items-baseline">
-              <AnimatedNumber value={totalCount} className="text-2xl font-bold text-black" />
-              <Text className="text-2xl font-bold text-black"> Upcoming Events</Text>
-            </View>
-            <TouchableOpacity onPress={() => setSearchVisible(true)} className="p-2">
-              <Ionicons name="search" size={22} color="#374151" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Active Search Display */}
-          {searchTerm && (
-            <View className="mx-3 mb-2 mt-1">
-              <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
-                <Ionicons name="search" size={16} color="#9ca3af" style={{ marginRight: 8 }} />
-                <Text className="flex-1 text-sm text-gray-900">{searchTerm}</Text>
-                <TouchableOpacity onPress={() => setSearchTerm('')} className="ml-2">
-                  <Ionicons name="close-circle" size={18} color="#9ca3af" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
-          <CategoryFilters
-            selectedCategory={categories}
-            onSelectCategory={setCategories}
-          />
-        </View>
-
         {/* Two Column Layout */}
         {events.length > 0 ? (
           <View className="flex-row px-2 pb-4">
@@ -143,7 +145,7 @@ const EventsScreen = ({ navigation }: any) => {
             </View>
           </View>
         ) : !isLoading ? (
-          <View className="py-10 items-center">
+          <View className="py-10 pt-12 items-center">
             <Text className="text-base text-gray-600">No events found</Text>
           </View>
         ) : null}
