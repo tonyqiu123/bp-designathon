@@ -5,8 +5,8 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 import { Ionicons } from '@expo/vector-icons';
 import EventsStack from './EventsStack';
 import SavedStack from './SavedStack';
+import ProfileStack from './ProfileStack';
 import ClubsScreen from '../screens/ClubsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import AddEventScreen from '../screens/AddEventScreen';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
@@ -33,8 +33,8 @@ const TabNavigatorContent = () => {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
           borderTopColor: '#E5E7EB',
-          height: 60 + insets.bottom,
-          paddingBottom: insets.bottom,
+          height: 48 + insets.bottom ,
+          paddingBottom: insets.bottom + 8,
           paddingTop: 8,
         },
         tabBarShowLabel: false,
@@ -79,27 +79,23 @@ const TabNavigatorContent = () => {
                 <TouchableOpacity
                   {...props}
                   style={{
-                    top: -5,
+                    top: 0,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
                 >
                   <View
                     style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 24,
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
                       backgroundColor: '#3b82f6',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      shadowColor: '#000',
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.25,
-                      shadowRadius: 3.84,
-                      elevation: 5,
+             
                     }}
                   >
-                    <Ionicons name="add" size={28} color="#ffffff" />
+                    <Ionicons name="add" size={24} color="#ffffff" />
                   </View>
                 </TouchableOpacity>
               ),
@@ -121,7 +117,7 @@ const TabNavigatorContent = () => {
           />
           <Tab.Screen
             name="Profile"
-            component={ProfileScreen}
+            component={ProfileStack}
             options={{
               tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size, focused }) => (

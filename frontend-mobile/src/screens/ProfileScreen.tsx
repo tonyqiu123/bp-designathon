@@ -86,7 +86,10 @@ const ProfileScreen = ({ navigation }: any) => {
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100"
+            onPress={() => navigation.navigate('Notifications')}
+          >
             <View className="flex-row items-center">
               <Ionicons name="notifications-outline" size={24} color="#374151" />
               <Text className="text-base text-black ml-3">Notifications</Text>
@@ -94,7 +97,10 @@ const ProfileScreen = ({ navigation }: any) => {
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100"
+            onPress={() => navigation.navigate('Settings')}
+          >
             <View className="flex-row items-center">
               <Ionicons name="settings-outline" size={24} color="#374151" />
               <Text className="text-base text-black ml-3">Settings</Text>
@@ -108,13 +114,6 @@ const ProfileScreen = ({ navigation }: any) => {
               <Text className="text-base text-black ml-3">Help & Support</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-
-          <TouchableOpacity className="flex-row items-center justify-between px-4 py-4 mt-4">
-            <View className="flex-row items-center">
-              <Ionicons name="log-out-outline" size={24} color="#EF4444" />
-              <Text className="text-base text-red-500 ml-3">Log Out</Text>
-            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
