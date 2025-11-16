@@ -78,16 +78,16 @@ const TabNavigatorContent = () => {
                 <TouchableOpacity
                   {...props}
                   style={{
-                    top: -10,
+                    top: -5,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
                 >
                   <View
                     style={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 28,
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
                       backgroundColor: '#3b82f6',
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -98,7 +98,7 @@ const TabNavigatorContent = () => {
                       elevation: 5,
                     }}
                   >
-                    <Ionicons name="add" size={32} color="#ffffff" />
+                    <Ionicons name="add" size={28} color="#ffffff" />
                   </View>
                 </TouchableOpacity>
               ),

@@ -9,12 +9,13 @@ interface SearchScreenProps {
 }
 
 const TRENDING_SEARCHES = [
-  'Career & Networking',
-  'Free food',
-  'Academic',
-  'Social & Games',
-  'Creative Arts',
-  'Athletics',
+  'pizza',
+  'coffee',
+  'blueprint',
+  'pokemon',
+  'maid cafe',
+  'poster sale',
+  'pottery painting',
 ];
 
 const SearchScreen: React.FC<SearchScreenProps> = ({ onClose, onSearch }) => {
@@ -39,7 +40,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onClose, onSearch }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom', 'left', 'right']}>
       <View className="flex-1">
         {/* Header with search input */}
         <View className="px-4 py-3 border-b border-gray-200">

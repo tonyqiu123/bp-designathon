@@ -63,7 +63,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
         {/* Organization Badge (bottom-left) */}
         {event.display_handle && (
           <BadgeMask variant="bottom-left">
-            <View className="bg-white px-2 py-1 rounded-lg">
+            <View className="bg-gray-100 px-2 py-1 rounded-lg">
               <Text className="text-xs font-extrabold text-gray-900">
                 {event.ig_handle && event.display_handle === event.ig_handle
                   ? `@${event.display_handle}`

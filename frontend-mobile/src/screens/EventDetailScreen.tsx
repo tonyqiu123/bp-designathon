@@ -69,16 +69,22 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
           left: 0,
           right: 0,
           height: SCREEN_HEIGHT * 0.5,
-          background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+          background: 'linear-gradient(to top, rgba(0,0,0,1), transparent)',
         }}
-        className="bg-gradient-to-t from-black/90 to-transparent"
+        className="bg-gradient-to-t from-black to-transparent"
       />
 
-      {/* Back button */}
+      {/* Back button and drag area */}
       <SafeAreaView edges={['top']} className="absolute top-0 left-0 right-0 z-10">
+        {/* Drag indicator */}
+        <View className="items-center pt-2 pb-4">
+          <View className="w-12 h-1 bg-white/40 rounded-full" />
+        </View>
+
+        {/* Back button */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="p-4"
+          className="absolute top-12 left-0 p-4"
         >
           <Ionicons name="chevron-back" size={28} color="#ffffff" />
         </TouchableOpacity>
@@ -122,7 +128,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
         <ScrollView
           className="px-4"
           showsVerticalScrollIndicator={false}
-          style={{ maxHeight: SCREEN_HEIGHT * 0.4 }}
+          style={{ maxHeight: SCREEN_HEIGHT * 0.3 + 100 }}
         >
           {/* Organization/Handle */}
           {event.display_handle && (
