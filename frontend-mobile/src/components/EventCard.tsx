@@ -119,17 +119,15 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
 
         {/* Heart/Save Button (bottom-right) */}
         <BadgeMask variant="bottom-right">
-          <TouchableOpacity
-            onPress={handleToggleSave}
-            className="px-1.5 py-1 bg-white"
-            style={{ backgroundColor: '#ffffff' }}
-          >
-            <Ionicons
-              name={isSaved ? 'heart' : 'heart-outline'}
-              size={16}
-              color={isSaved ? '#EF4444' : '#374151'}
-            />
-          </TouchableOpacity>
+          <View className="bg-white px-2 py-1 rounded-lg">
+            <TouchableOpacity onPress={handleToggleSave}>
+              <Ionicons
+                name={isSaved ? 'heart' : 'heart-outline'}
+                size={16}
+                color={isSaved ? '#EF4444' : '#374151'}
+              />
+            </TouchableOpacity>
+          </View>
         </BadgeMask>
       </View>
       <View className="p-2.5">

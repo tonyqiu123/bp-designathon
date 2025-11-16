@@ -46,8 +46,8 @@ const ClubCard: React.FC<ClubCardProps> = ({ club, onPress }) => {
   };
 
   return (
-    <TouchableOpacity 
-      className="bg-gray-50 rounded-xl mb-2 overflow-hidden flex-1 mx-1 border border-gray-200" 
+    <TouchableOpacity
+      className="bg-gray-800 rounded-xl mb-2 overflow-hidden flex-1 mx-1"
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -86,13 +86,13 @@ const ClubCard: React.FC<ClubCardProps> = ({ club, onPress }) => {
           </BadgeMask>
         )}
 
-        <Text className="text-base font-semibold text-black mb-2 leading-tight pr-16" numberOfLines={2}>
+        <Text className="text-base font-semibold text-white mb-2 leading-tight pr-16" numberOfLines={2}>
           {club.club_name}
         </Text>
-        
+
         {club.categories && club.categories.length > 0 && (
           <View className="flex-row items-start mb-3 gap-1.5">
-            <Text className="text-sm text-gray-600 leading-4" numberOfLines={2}>
+            <Text className="text-sm text-gray-300 leading-4" numberOfLines={2}>
               {club.categories.join(' | ')}
             </Text>
           </View>

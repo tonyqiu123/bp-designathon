@@ -78,14 +78,16 @@ const BadgeMask: React.FC<BadgeMaskProps> = ({ variant, children }) => {
     case 'bottom-right':
       return (
         <View style={{ position: 'absolute', bottom: 0, right: 0, flexDirection: 'column' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <BottomRightMask color={maskColor} />
-            <View style={{ paddingBottom: 4, paddingRight: 4, backgroundColor: maskColor, borderBottomRightRadius: 12 }}>
-              {children}
-            </View>
-          </View>
           <View style={{ marginLeft: 'auto' }}>
             <BottomRightMask color={maskColor} />
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ marginTop: 'auto' }}>
+              <BottomRightMask color={maskColor} />
+            </View>
+            <View style={{ paddingTop: 4, paddingLeft: 4, backgroundColor: maskColor, borderTopLeftRadius: 12 }}>
+              {children}
+            </View>
           </View>
         </View>
       );

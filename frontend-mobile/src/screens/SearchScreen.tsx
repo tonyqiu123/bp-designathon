@@ -52,6 +52,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ onClose, onSearch }) => {
               <Ionicons name="search" size={18} color="#9ca3af" style={{ marginRight: 8 }} />
               <TextInput
                 className="flex-1 text-base text-black"
+                style={{ paddingVertical: 0, textAlignVertical: 'center' }}
                 value={searchText}
                 onChangeText={setSearchText}
                 placeholder="Search events..."

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, StatusBar, Modal, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Event } from '../types/event';
 import { Ionicons } from '@expo/vector-icons';
 import { savedEventsService } from '../services/savedEvents';
+import SearchScreen from './SearchScreen';
 
 interface EventDetailScreenProps {
   route: {
@@ -20,6 +21,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation }) => {
   const { event } = route.params;
   const [isSaved, setIsSaved] = useState(false);
+  const [searchVisible, setSearchVisible] = useState(false);
 
   useEffect(() => {
     const checkSaved = async () => {
@@ -32,6 +34,17 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
   const handleToggleSave = async () => {
     const newSavedState = await savedEventsService.toggleSaveEvent(event.id);
     setIsSaved(newSavedState);
+  };
+
+  const handleShare = async () => {
+    try {
+      const message = `Check out this event: ${event.title}\n${formatDate(event.dtstart_utc)} at ${formatTime(event.dtstart_utc)}${event.location ? `\nLocation: ${event.location}` : ''}`;
+      await Share.share({
+        message,
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -96,10 +109,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={28} color="#ffffff" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            // Navigate to search - you can implement this based on your navigation setup
-            navigation.navigate('Events');
-          }}>
+          <TouchableOpacity onPress={() => setSearchVisible(true)}>
             <Ionicons name="search" size={24} color="#ffffff" />
           </TouchableOpacity>
         </View>
@@ -130,11 +140,11 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
         </View>
 
         {/* Share */}
-        <View className="items-center">
+        <TouchableOpacity onPress={handleShare} className="items-center">
           <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mb-1">
             <Ionicons name="share-outline" size={26} color="#ffffff" />
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Bottom information section */}
@@ -224,6 +234,21 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
           </View>
         </ScrollView>
       </View>
+
+      {/* Search Modal */}
+      <Modal
+        visible={searchVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+      >
+        <SearchScreen
+          onClose={() => setSearchVisible(false)}
+          onSearch={(term) => {
+            navigation.navigate('Events');
+            setSearchVisible(false);
+          }}
+        />
+      </Modal>
     </View>
   );
 };

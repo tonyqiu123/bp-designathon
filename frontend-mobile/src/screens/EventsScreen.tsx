@@ -165,7 +165,10 @@ const EventsScreen = ({ navigation }: any) => {
       >
         <SearchScreen
           onClose={() => setSearchVisible(false)}
-          onSearch={(term) => setSearchTerm(term)}
+          onSearch={(term) => {
+            setSearchTerm(term);
+            setCategories('');
+          }}
         />
       </Modal>
     </SafeAreaView>
