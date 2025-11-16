@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { Event } from '../types/event';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -44,8 +46,18 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
     }
   };
 
+  // Swipe right to go back gesture
+  const panGesture = Gesture.Pan()
+    .onEnd((event) => {
+      // If swiped right with enough velocity or distance
+      if (event.velocityX > 500 || event.translationX > 100) {
+        navigation.goBack();
+      }
+    });
+
   return (
-    <View className="flex-1 bg-black">
+    <GestureDetector gesture={panGesture}>
+      <View className="flex-1 bg-black">
       <StatusBar barStyle="light-content" />
 
       {/* Full-screen image background */}
@@ -62,32 +74,31 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
       )}
 
       {/* Dark gradient overlay for readability */}
-      <View
+      <LinearGradient
+        colors={['transparent', 'rgba(0,0,0,0.7)', 'rgba(0,0,0,0.95)']}
+        locations={[0, 0.5, 1]}
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
           height: SCREEN_HEIGHT * 0.5,
-          background: 'linear-gradient(to top, rgba(0,0,0,1), transparent)',
         }}
-        className="bg-gradient-to-t from-black to-transparent"
       />
 
-      {/* Back button and drag area */}
+      {/* Back button and Search icon */}
       <SafeAreaView edges={['top']} className="absolute top-0 left-0 right-0 z-10">
-        {/* Drag indicator */}
-        <View className="items-center pt-2 pb-4">
-          <View className="w-12 h-1 bg-white/40 rounded-full" />
+        <View className="flex-row items-center justify-between px-4 py-4">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={28} color="#ffffff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            // Navigate to search - you can implement this based on your navigation setup
+            navigation.navigate('Events');
+          }}>
+            <Ionicons name="search" size={24} color="#ffffff" />
+          </TouchableOpacity>
         </View>
-
-        {/* Back button */}
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="absolute top-12 left-0 p-4"
-        >
-          <Ionicons name="chevron-back" size={28} color="#ffffff" />
-        </TouchableOpacity>
       </SafeAreaView>
 
       {/* Right side action buttons (TikTok-style) */}
@@ -106,13 +117,6 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
             <Ionicons name="chatbubble-outline" size={26} color="#ffffff" />
           </View>
           <Text className="text-white text-xs font-semibold">0</Text>
-        </View>
-
-        {/* Star/Bookmark */}
-        <View className="mb-6 items-center">
-          <View className="w-12 h-12 rounded-full bg-white/20 items-center justify-center mb-1">
-            <Ionicons name="star-outline" size={28} color="#ffffff" />
-          </View>
         </View>
 
         {/* Share */}
@@ -210,7 +214,8 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
           </View>
         </ScrollView>
       </View>
-    </View>
+      </View>
+    </GestureDetector>
   );
 };
 

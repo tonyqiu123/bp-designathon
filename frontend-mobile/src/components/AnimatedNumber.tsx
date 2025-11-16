@@ -1,11 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  interpolate,
-} from 'react-native-reanimated';
+import React, { useEffect, useRef, useMemo } from 'react';
+import { StyleSheet, View, Animated } from 'react-native';
 
 interface AnimatedNumberProps {
   value: number;
@@ -13,37 +7,44 @@ interface AnimatedNumberProps {
 }
 
 const AnimatedDigit: React.FC<{ digit: string; index: number }> = ({ digit, index }) => {
-  const animValue = useSharedValue(0);
+  const translateY = useRef(new Animated.Value(-20)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    animValue.value = 0;
-    animValue.value = withSpring(1, {
-      damping: 15,
-      stiffness: 100,
-    });
+    // Reset animation values
+    translateY.setValue(-20);
+    opacity.setValue(0);
+
+    // Stagger the animation slightly for each digit
+    const delay = index * 30;
+
+    Animated.parallel([
+      Animated.spring(translateY, {
+        toValue: 0,
+        delay,
+        tension: 80,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        delay,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, [digit]);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      animValue.value,
-      [0, 1],
-      [-20, 0]
-    );
-
-    const opacity = interpolate(
-      animValue.value,
-      [0, 1],
-      [0, 1]
-    );
-
-    return {
-      transform: [{ translateY }],
-      opacity,
-    };
-  });
-
   return (
-    <Animated.Text style={[styles.digit, animatedStyle]}>
+    <Animated.Text
+      style={[
+        styles.digit,
+        {
+          transform: [{ translateY }],
+          opacity,
+        },
+      ]}
+    >
       {digit}
     </Animated.Text>
   );
