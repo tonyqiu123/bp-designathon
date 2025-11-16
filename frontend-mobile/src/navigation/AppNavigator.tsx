@@ -5,6 +5,8 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 import { Ionicons } from '@expo/vector-icons';
 import EventsStack from './EventsStack';
 import ClubsScreen from '../screens/ClubsScreen';
+import SavedScreen from '../screens/SavedScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
 
@@ -108,6 +110,7 @@ const TabNavigatorContent = () => {
           </Tab.Screen>
           <Tab.Screen
             name="Saved"
+            component={SavedScreen}
             options={{
               tabBarLabel: 'Saved',
               tabBarIcon: ({ color, size, focused }) => (
@@ -118,11 +121,10 @@ const TabNavigatorContent = () => {
                 />
               ),
             }}
-          >
-            {() => <PlaceholderScreen title="Saved Events" />}
-          </Tab.Screen>
+          />
           <Tab.Screen
             name="Profile"
+            component={ProfileScreen}
             options={{
               tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size, focused }) => (
@@ -133,9 +135,7 @@ const TabNavigatorContent = () => {
                 />
               ),
             }}
-          >
-            {() => <PlaceholderScreen title="Profile" />}
-          </Tab.Screen>
+          />
     </Tab.Navigator>
   );
 };

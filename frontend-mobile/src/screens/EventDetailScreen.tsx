@@ -46,20 +46,8 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
     }
   };
 
-  // Swipe right to go back gesture
-  const panGesture = Gesture.Pan()
-    .activeOffsetX(10) // Only activate when swiping right (positive X direction)
-    .failOffsetY([-20, 20]) // Fail if significant vertical movement (allow scrolling)
-    .onEnd((event) => {
-      // If swiped right with enough velocity or distance
-      if (event.velocityX > 500 || event.translationX > 100) {
-        navigation.goBack();
-      }
-    });
-
   return (
-    <GestureDetector gesture={panGesture}>
-      <View className="flex-1 bg-black">
+    <View className="flex-1 bg-black">
       <StatusBar barStyle="light-content" />
 
       {/* Full-screen image background */}
@@ -216,8 +204,7 @@ const EventDetailScreen: React.FC<EventDetailScreenProps> = ({ route, navigation
           </View>
         </ScrollView>
       </View>
-      </View>
-    </GestureDetector>
+    </View>
   );
 };
 
