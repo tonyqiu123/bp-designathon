@@ -53,7 +53,10 @@ const ProfileScreen = ({ navigation }: any) => {
 
         {/* Menu Items */}
         <View className="py-4">
-          <TouchableOpacity className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100"
+            onPress={() => navigation.navigate('Saved')}
+          >
             <View className="flex-row items-center">
               <Ionicons name="bookmark-outline" size={24} color="#374151" />
               <Text className="text-base text-black ml-3">Saved Events</Text>
@@ -61,7 +64,10 @@ const ProfileScreen = ({ navigation }: any) => {
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100"
+            onPress={() => navigation.navigate('Saved')}
+          >
             <View className="flex-row items-center">
               <Ionicons name="calendar-outline" size={24} color="#374151" />
               <Text className="text-base text-black ml-3">My Events</Text>
